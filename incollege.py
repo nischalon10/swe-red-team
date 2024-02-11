@@ -4,6 +4,7 @@ class InCollegeApp:
     def __init__(self):
         self.user_credentials = {}  # Dictionary to store username and password
         self.MAX_ACCOUNTS = 5  # Maximum number of accounts
+        self.job_posts = []  # List to store job posts
 
     def create_account(self, username, password):
         # Check if maximum number of accounts has been reached
@@ -20,9 +21,22 @@ class InCollegeApp:
         if not re.search(r"[!@#$%^&*()_+{}|:\"<>?]", password):
             return "Password must contain at least one special character."
         
-        # Check if username already exists
-        self.user_credentials[username] = [password, 0]
+        first_name = input("Enter your first name: ")
+        last_name = input("Enter your last name: ")
+
+        self.user_credentials[username] = {
+            'password': password,
+            'first_name': first_name,
+            'last_name': last_name
+        }
+
         return "Account created successfully"
+        
+        # [old code]
+        # Check if username already exists
+        # self.user_credentials[username] = [password, 0]
+        # return "Account created successfully"
+        
 
     def login(self, username, password):
         # Check if username and password match
@@ -34,11 +48,13 @@ class InCollegeApp:
     #---------------------------------#
 
     def get_post_login_options(self):
-
+        
+        # added a new option to the list #4 for epic#2
         options_list = [
             "1. Job search/Internship",
             "2. Find someone you know",
             "3. Learn a new skill"
+            "4. Log out / return to previous level"
         ]
         select_option = "\n".join(options_list)
         return select_option
@@ -46,12 +62,16 @@ class InCollegeApp:
     def select_option(self, option_number):
         under_construction_message = "Under construction."
 
+        # added a new option to the list #4 for epic#2
         if option_number == "1":
             return under_construction_message
         elif option_number == "2":
             return under_construction_message
         elif option_number == "3":
             return self.list_skills()
+        elif option_number == "4":
+            return "You have been logged out."
+            # or return self.main_menu() for future development
         else:
             return "Invalid Option"
 
@@ -75,5 +95,25 @@ class InCollegeApp:
             return self.get_post_login_options()
         else:
             return "Invalid Option"
+        
+    #---------------------------------#
+        
+    def display_success_story_and_video_option(self):
+        success_story = "Meet Hideo Kojima, a recent graduate who landed their dream job at a top tech company using InCollege."
+        print(success_story)
 
+        play_video_option = input("Would you like to watch a video? (yes/no): ")
+        if play_video_option.lower() == "yes":
+            return "Video is now playing."
+        else:
+            return "Thank you for visiting InCollege."
+        
+    def find_person(self):
+        first_name = input("Enter the first name of the person you are looking for: ")
+        last_name = input("Enter the last name of the person you are looking for: ")
 
+        for user_info in self.user_credentials.values():
+            if user_info['first_name'].lower() == first_name and user_info['last_name'].lower() == last_name:
+                return f"They are a part of the InCollege system."
+        return "They are not a part of the InCollege system."
+    
