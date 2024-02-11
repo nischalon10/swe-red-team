@@ -1,3 +1,5 @@
+# incollege_app.py
+
 import re
 
 class InCollegeApp:
@@ -147,10 +149,3 @@ class InCollegeApp:
                 break
             else:
                 print("Invalid Option")
-    
-def main():
-    app = InCollegeApp()  # Create an instance of your application class
-    app.main_menu()  # Display the main menu and start the application flow
-
-if __name__ == "__main__":
-    main()
