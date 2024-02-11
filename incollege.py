@@ -45,7 +45,7 @@ class InCollegeApp:
             return "You have successfully logged in"
         return "Incorrect username / password, please try again."
 
-    #---------------------------------#
+    #---------------- epic 1 -----------------#
 
     def get_post_login_options(self):
         
@@ -96,7 +96,7 @@ class InCollegeApp:
         else:
             return "Invalid Option"
         
-    #---------------------------------#
+    #---------------- epic 2 -----------------#
         
     def display_success_story_and_video_option(self):
         success_story = "Meet Hideo Kojima, a recent graduate who landed their dream job at a top tech company using InCollege."
