@@ -117,3 +117,40 @@ class InCollegeApp:
                 return f"They are a part of the InCollege system."
         return "They are not a part of the InCollege system."
     
+    def main_menu(self):
+        while True:
+            print("\nWelcome to InCollege")
+            print("Main Menu")
+            print("1. Create Account")
+            print("2. Login")
+            print("3. View Success Story and Video")
+            print("4. Exit")
+
+            choice = input("Select an option: ")
+
+            if choice == "1":
+                username = input("Enter your username: ")
+                password = input("Enter your password: ")
+                print(self.create_account(username, password))
+            elif choice == "2":
+                username = input("Enter your username: ")
+                password = input("Enter your password: ")
+                print(self.login(username, password))
+                if self.login(username, password) == "You have successfully logged in":
+                    print(self.get_post_login_options())
+                    option = input("Select an option: ")
+                    print(self.select_option(option))
+            elif choice == "3":
+                print(self.display_success_story_and_video_option())
+            elif choice == "4":
+                print("Thank you for visiting InCollege.")
+                break
+            else:
+                print("Invalid Option")
+    
+def main():
+    app = InCollegeApp()  # Create an instance of your application class
+    app.main_menu()  # Display the main menu and start the application flow
+
+if __name__ == "__main__":
+    main()
