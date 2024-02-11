@@ -114,7 +114,7 @@ class InCollegeApp:
 
         for user_info in self.user_credentials.values():
             if user_info['first_name'].lower() == first_name and user_info['last_name'].lower() == last_name:
-                return f"They are a part of the InCollege system."
+                return "They are a part of the InCollege system."
         return "They are not a part of the InCollege system."
     
     def main_menu(self):
