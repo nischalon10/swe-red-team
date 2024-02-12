@@ -42,8 +42,9 @@ class InCollegeApp:
 
     def login(self, username, password):
         # Check if username and password match
-        if username in self.user_credentials and self.user_credentials[username][0] == password:
-            self.user_credentials[username][1] += 1
+        if username in self.user_credentials and self.user_credentials[username]['password'] == password:
+            # [old code]
+            # self.user_credentials[username][1] += 1
             return "You have successfully logged in"
         return "Incorrect username / password, please try again."
 
@@ -68,7 +69,7 @@ class InCollegeApp:
         if option_number == "1":
             return under_construction_message
         elif option_number == "2":
-            return under_construction_message
+            return self.find_person()
         elif option_number == "3":
             return self.list_skills()
         elif option_number == "4":
@@ -120,32 +121,42 @@ class InCollegeApp:
         return "They are not a part of the InCollege system."
     
     def main_menu(self):
-        while True:
-            print("\nWelcome to InCollege")
-            print("Main Menu")
-            print("1. Create Account")
-            print("2. Login")
-            print("3. View Success Story and Video")
-            print("4. Exit")
+        menu_options = [
+            "Welcome to InCollege",
+            "Main Menu",
+            "1. Create Account",
+            "2. Login",
+            "3. View Success Story and Video",
+            "4. Exit"
+        ]
+        menu = "\n".join(menu_options)
+        print(menu)
+        
+        # print("\nWelcome to InCollege")
+        # print("\nMain Menu")
+        # print("\n1. Create Account")
+        # print("\n2. Login")
+        # print("\n3. View Success Story and Video")
+        # print("\n4. Exit")
 
-            choice = input("Select an option: ")
+        choice = input("\nSelect an option: ")
 
-            if choice == "1":
-                username = input("Enter your username: ")
-                password = input("Enter your password: ")
-                print(self.create_account(username, password))
-            elif choice == "2":
-                username = input("Enter your username: ")
-                password = input("Enter your password: ")
-                print(self.login(username, password))
-                if self.login(username, password) == "You have successfully logged in":
-                    print(self.get_post_login_options())
-                    option = input("Select an option: ")
-                    print(self.select_option(option))
-            elif choice == "3":
-                print(self.display_success_story_and_video_option())
-            elif choice == "4":
-                print("Thank you for visiting InCollege.")
-                break
-            else:
-                print("Invalid Option")
+        if choice == "1":
+            username = input("Enter your username: ")
+            password = input("Enter your password: ")
+            return self.create_account(username, password)
+        elif choice == "2":
+            username = input("Enter your username: ")
+            password = input("Enter your password: ")
+            login_result = self.login(username, password)
+            print(login_result)
+            if login_result == "You have successfully logged in":
+                print(self.get_post_login_options())
+                option = input("Select an option: ")
+                print(self.select_option(option))
+        elif choice == "3":
+            return self.display_success_story_and_video_option()
+        elif choice == "4":
+            return "Thank you for visiting InCollege."
+        else:
+            return "Invalid Option"
