@@ -144,7 +144,7 @@ class InCollegeApp:
         if choice == "1":
             username = input("Enter your username: ")
             password = input("Enter your password: ")
-            return self.create_account(username, password)
+            print(self.create_account(username, password))
         elif choice == "2":
             username = input("Enter your username: ")
             password = input("Enter your password: ")
@@ -155,8 +155,8 @@ class InCollegeApp:
                 option = input("Select an option: ")
                 print(self.select_option(option))
         elif choice == "3":
-            return self.display_success_story_and_video_option()
+            print(self.display_success_story_and_video_option())
         elif choice == "4":
-            return "Thank you for visiting InCollege."
+            print("Thank you for visiting InCollege.")
         else:
-            return "Invalid Option"
+            print("Invalid Option")
