@@ -42,8 +42,8 @@ class InCollegeApp:
 
     def login(self, username, password):
         # Check if username and password match
-        if username in self.user_credentials and self.user_credentials[username][0] == password:
-            self.user_credentials[username][1] += 1
+        if username in self.user_credentials and self.user_credentials[username]['password'] == password:
+            # self.user_credentials[username][1] += 1
             return "You have successfully logged in"
         return "Incorrect username / password, please try again."
 
@@ -55,7 +55,7 @@ class InCollegeApp:
         options_list = [
             "1. Job search/Internship",
             "2. Find someone you know",
-            "3. Learn a new skill"
+            "3. Learn a new skill",
             "4. Log out / return to previous level"
         ]
         select_option = "\n".join(options_list)
@@ -120,7 +120,7 @@ class InCollegeApp:
         return "They are not a part of the InCollege system."
     
     def main_menu(self):
-        while True:
+        # while True:
             print("\nWelcome to InCollege")
             print("Main Menu")
             print("1. Create Account")
@@ -142,10 +142,12 @@ class InCollegeApp:
                     print(self.get_post_login_options())
                     option = input("Select an option: ")
                     print(self.select_option(option))
+                    
+                # break
             elif choice == "3":
                 print(self.display_success_story_and_video_option())
             elif choice == "4":
                 print("Thank you for visiting InCollege.")
-                break
+                # break
             else:
                 print("Invalid Option")
