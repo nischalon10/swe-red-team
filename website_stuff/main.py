@@ -1,6 +1,10 @@
-from website import create_app
+# main.py
 
-app = create_app()
+from incollege import InCollegeApp
 
-if __name__ == '__main__':
-    app.run(debug=True)
+def main():
+    app = InCollegeApp()
+    app.main_menu()  # Assuming you have a method called main_menu to display the main menu
+
+if __name__ == "__main__":
+    main()

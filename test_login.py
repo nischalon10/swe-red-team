@@ -61,3 +61,6 @@ def test_account_creation_with_invalid_password_digit(app):
 def test_account_creation_with_invalid_password_special(app):
     result = app.create_account("user2", "passW0rds")
     assert "Password must" in result, "Account should not be created with an invalid password"  
+
+
+def 
