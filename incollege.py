@@ -159,13 +159,6 @@ class InCollegeApp:
         ]
         menu = "\n".join(menu_options)
         print(menu)
-        
-        # print("\nWelcome to InCollege")
-        # print("\nMain Menu")
-        # print("\n1. Create Account")
-        # print("\n2. Login")
-        # print("\n3. View Success Story and Video")
-        # print("\n4. Exit")
 
         choice = input("\nSelect an option: ")
 
