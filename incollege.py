@@ -4,7 +4,13 @@ import re
 
 class InCollegeApp:
     def __init__(self):
-        self.user_credentials = {}  # Dictionary to store username and password
+        self.user_credentials = {
+            "test" : {
+                'password': "test",
+                'first_name': "test",
+                'last_name': "test"
+            },
+        }  # Dictionary to store username and password
         self.MAX_ACCOUNTS = 5  # Maximum number of accounts
         self.job_posts = []  # List to store job posts
 
@@ -62,12 +68,12 @@ class InCollegeApp:
         select_option = "\n".join(options_list)
         return select_option
 
-    def select_option(self, option_number):
+    def select_option(self, option_number, username):
         under_construction_message = "Under construction."
 
         # added a new option to the list #4 for epic#2
         if option_number == "1":
-            return under_construction_message
+            return self.post_job(username)
         elif option_number == "2":
             return self.find_person()
         elif option_number == "3":
@@ -111,6 +117,28 @@ class InCollegeApp:
         else:
             return "Thank you for visiting InCollege."
         
+    def post_job(self,username):
+        if len(self.job_posts) >= 5:
+            print("Maximum number of jobs posted. Please try again later.")
+            return
+
+        title = input("Enter job title: ")
+        description = input("Enter job description: ")
+        employer = input("Enter employer: ")
+        location = input("Enter location: ")
+        salary = input("Enter salary: ")
+
+        self.job_posts.append({
+            'title': title,
+            'description': description,
+            'employer': employer,
+            'location': location,
+            'salary': salary,
+            'username': username
+        })
+
+        print("Job posted successfully.")
+    
     def find_person(self):
         first_name = input("Enter the first name of the person you are looking for: ")
         last_name = input("Enter the last name of the person you are looking for: ")
@@ -153,7 +181,7 @@ class InCollegeApp:
             if login_result == "You have successfully logged in":
                 print(self.get_post_login_options())
                 option = input("Select an option: ")
-                print(self.select_option(option))
+                print(self.select_option(option, username))
         elif choice == "3":
             print(self.display_success_story_and_video_option())
         elif choice == "4":
