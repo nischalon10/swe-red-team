@@ -2,6 +2,7 @@
 
 import re
 
+
 class InCollegeApp:
     def __init__(self):
         self.user_credentials = {

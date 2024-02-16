@@ -264,3 +264,5 @@ def test_main_menu_invalid(app, capfd, monkeypatch):
     result = app.main_menu()
     out, err = capfd.readouterr()
     assert "Invalid Option" in out, "Invalid option should be handled correctly"
+
+
