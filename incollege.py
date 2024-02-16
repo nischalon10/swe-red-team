@@ -16,6 +16,11 @@ class InCollegeApp:
         self.job_posts = []  # List to store job posts  
         self.language = "English"  # Default language is English
 
+        # task 3 - guest controls are off by default
+        self.email = False
+        self.sms = False
+        self.targeted_advertising = False
+
     def create_account(self, username, password):
         # Check if maximum number of accounts has been reached
         if len(self.user_credentials) >= self.MAX_ACCOUNTS:
@@ -186,6 +191,54 @@ class InCollegeApp:
             print(self.translate_language("Invalid Option"))
 
 #---------------- epic 3 -----------------#
+            
+    def important_links(self):
+        links = [
+            "1. Copyright Notice",
+            "2. About",
+            "3. Accessibility",
+            "4. User Agreement",
+            "5. Privacy Policy",
+            "6. Cookie Policy",
+            "7. Copyright Policy",
+            "8. Brand Policy",
+            "9. Back to previous"
+        ]
+        link_options = "\n".join(links)
+        return self.translate_language(link_options + "\nSelect a link to visit.")
+    
+    # will need to be changed if we are given information about the links
+    def select_link(self, link_number):
+        if link_number in ["1", "2", "3", "4", "5", "6", "7", "8", "9"]:
+            return self.translate_language("Under construction.")
+        else:
+            return self.translate_language("Invalid Option")
+        
+    def guest_controls(self):
+        settings = [
+            "1. Email",
+            "2. SMS",
+            "3. Targeted Advertising",
+            "4. Back to previous"
+        ]
+        setting_options = "\n".join(settings)
+        return self.translate_language(setting_options + "\nSelect a setting to change.")
+    
+    def toggle_guest_controls(self, setting_number):
+        if setting_number in "1":
+            self.email = not self.email
+            return self.translate_language("Email notifications have been turned off.")
+        elif setting_number in "2":
+            self.sms = not self.sms
+            return self.translate_language("SMS notifications have been turned off.")
+        elif setting_number in "3":
+            self.targeted_advertising = not self.targeted_advertising
+            return self.translate_language("Targeted advertising has been turned off.")
+        elif setting_number in "4":
+            print(self.translate_language("Returning to Post Login.")) # i dont know where exiting this menu goes back to but i assume main menu
+            return self.get_post_login_options()
+        else:
+            return self.translate_language("Invalid Option")
 
     def translate_language(self, msg):
         if self.language.lower() == 'spanish':
@@ -210,3 +263,4 @@ class InCollegeApp:
 # test.choose_language()
 # print(test.translate_language("Hello"))
 # print(test.create_account("user1", "ValidPass123!"))
+# print(test.list_skills())
