@@ -1,6 +1,7 @@
 # incollege_app.py
 
 import re
+from deep_translator import GoogleTranslator
 
 class InCollegeApp:
     def __init__(self):
@@ -15,11 +16,20 @@ class InCollegeApp:
         self.MAX_ACCOUNTS = 5  # Maximum number of accounts
         self.job_posts = []  # List to store job posts
         
-        self.current_language = "English"  # Default language
+        self.language = "english"  # Default language
+        self.email = False  # Email notification status
+        self.sms = False  # SMS notification status
+        self.targeted_advertising = False  # Targeted ads status
+        
+        """
         self.translations = {
-            "English": {},
-            "Spanish": {"Welcome to InCollege": "Bienvenida a en la universidad"}
+            "Spanish": {
+                "Welcome to InCollege": "Bienvenido a InCollege",
+                "Main Menu": "Menú principal",
+                "Under construction.": "En construcción.",
+            }
         }
+        """
 
     def create_account(self, username, password):
         # Check if maximum number of accounts has been reached
@@ -28,16 +38,16 @@ class InCollegeApp:
 
         # restrictions for password
         if len(password) < 8 or len(password) > 13:
-            return "Password must be between 8 and 13 characters."
+            return self.translate_language("Password must be between 8 and 13 characters.")
         if not re.search(r"[A-Z]", password):
-            return "Password must contain at least one capital letter."
+            return self.translate_language("Password must contain at least one capital letter.")
         if not re.search(r"\d", password):
-            return "Password must contain at least one digit."
+            return self.translate_language("Password must contain at least one digit.")
         if not re.search(r"[!@#$%^&*()_+{}|:\"<>?]", password):
-            return "Password must contain at least one special character."
+            return self.translate_language("Password must contain at least one special character.")
         
-        first_name = input("Enter your first name: ")
-        last_name = input("Enter your last name: ")
+        first_name = input(self.translate_language("Enter your first name: "))
+        last_name = input(self.translate_language("Enter your last name: "))
 
         self.user_credentials[username] = {
             'password': password,
@@ -46,7 +56,7 @@ class InCollegeApp:
             'login_status': True
         }
 
-        print("Account created successfully")
+        print(self.translate_language("Account created successfully"))
         self.get_post_login_options()
         
         
@@ -62,8 +72,9 @@ class InCollegeApp:
             # [old code]
             # self.user_credentials[username][1] += 1
             self.user_credentials[username]['login_status'] = True
-            return "You have successfully logged in"
-        return "Incorrect username / password, please try again."
+            print(self.translate_language("You have successfully logged in"))
+            self.get_post_login_options()
+        return self.translate_language("Incorrect username / password, please try again.")
     
     #---------------- epic 1 -----------------#
 
@@ -79,8 +90,8 @@ class InCollegeApp:
             "6. Log out"
         ]
         select_option = "\n".join(options_list)
-        print(select_option)
-        selected_option = input("Select an option: ")
+        print(self.translate_language(select_option))
+        selected_option = input(self.translate_language("Select an option: "))
         self.select_option(selected_option)
         
 
@@ -97,7 +108,7 @@ class InCollegeApp:
         elif option_number == "4":
             self.display_useful_links()
         elif option_number == "5":
-            self.display_important_links()
+            self.important_links()
         elif option_number == "6":
             print("You have successfully logged out.")
             self.main_menu()
@@ -213,7 +224,7 @@ class InCollegeApp:
         elif choice == "5":
             self.display_useful_links()
         elif choice == "6":
-            self.display_important_links()
+            self.important_links()
         else:
             return "Invalid Option"
 
@@ -222,8 +233,12 @@ class InCollegeApp:
     def any_user_logged_in(self):
         return any(user_info['login_status'] for user_info in self.user_credentials.values())
 
-    def translate_language(self, message):
-        return self.translations.get(self.current_language, {}).get(message, message)
+    def translate_language(self, msg):
+        if self.language.lower() == 'spanish':
+            translated = GoogleTranslator(source='en', target='es').translate(msg)
+            return translated
+        else:    
+            return msg
     
     def under_construction(self):
         return self.translate_language("Under construction.")
@@ -290,6 +305,7 @@ class InCollegeApp:
         else:
             return "Invalid Option"
     
+    """
     def display_important_links(self):
         important_links = [
             "1. Copyright Notice",
@@ -304,6 +320,7 @@ class InCollegeApp:
         print("\nSelect a link to view.")
         selected_link = input("Enter a number: ")
         self.select_important_link(selected_link)
+    
     
     def select_important_link(self, link_number):
         if link_number in ["1", "2", "3", "4"]:
@@ -345,3 +362,62 @@ class InCollegeApp:
             self.get_post_login_options()
         else:
             self.main_menu()
+            
+    """
+    #---------------- epic 3 -----------------# task 3 and 4 from Vynze
+    
+    def important_links(self):
+        links = [
+            "1. Copyright Notice",
+            "2. About",
+            "3. Accessibility",
+            "4. User Agreement",
+            "5. Privacy Policy",
+            "6. Cookie Policy",
+            "7. Copyright Policy",
+            "8. Brand Policy",
+            "9. Back to previous"
+        ]
+        link_options = "\n".join(links)
+        return self.translate_language(link_options + "\nSelect a link to visit.")
+
+    # will need to be changed if we are given information about the links
+    def select_link(self, link_number):
+        if link_number in ["1", "2", "3", "4", "5", "6", "7", "8", "9"]:
+            return self.translate_language("Under construction.")
+        else:
+            return self.translate_language("Invalid Option")
+        
+    def guest_controls(self):
+        settings = [
+            "1. Email",
+            "2. SMS",
+            "3. Targeted Advertising",
+            "4. Back to previous"
+        ]
+        setting_options = "\n".join(settings)
+        return self.translate_language(setting_options + "\nSelect a setting to change.")
+
+    def toggle_guest_controls(self, setting_number):
+        if setting_number in "1":
+            self.email = not self.email
+            return self.translate_language("Email notifications have been turned off.")
+        elif setting_number in "2":
+            self.sms = not self.sms
+            return self.translate_language("SMS notifications have been turned off.")
+        elif setting_number in "3":
+            self.targeted_advertising = not self.targeted_advertising
+            return self.translate_language("Targeted advertising has been turned off.")
+        elif setting_number in "4":
+            print(self.translate_language("Returning to Post Login.")) # i dont know where exiting this menu goes back to but i assume main menu
+            return self.get_post_login_options()
+        else:
+            return self.translate_language("Invalid Option")
+        
+    def choose_language(self):
+        language = input("Choose a language: ")
+        if language.lower() in ['english', 'spanish']:
+            self.language = language
+            return f"Language has been set to {language}."
+        else:
+            return "Invalid language. Please choose English or Spanish."
