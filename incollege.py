@@ -8,7 +8,8 @@ class InCollegeApp:
             "test" : {
                 'password': "test",
                 'first_name': "test",
-                'last_name': "test"
+                'last_name': "test",
+                'login_status': False
             },
         }  # Dictionary to store username and password
         self.MAX_ACCOUNTS = 5  # Maximum number of accounts
@@ -17,7 +18,7 @@ class InCollegeApp:
         self.current_language = "English"  # Default language
         self.translations = {
             "English": {},
-            "Spanish": {}
+            "Spanish": {"Welcome to InCollege": "Bienvenida a en la universidad"}
         }
 
     def create_account(self, username, password):
@@ -41,11 +42,12 @@ class InCollegeApp:
         self.user_credentials[username] = {
             'password': password,
             'first_name': first_name,
-            'last_name': last_name
+            'last_name': last_name,
+            'login_status': True
         }
 
         print("Account created successfully")
-        print(self.get_post_login_options())
+        self.get_post_login_options()
         
         
         # [old code]
@@ -59,9 +61,10 @@ class InCollegeApp:
         if username in self.user_credentials and self.user_credentials[username]['password'] == password:
             # [old code]
             # self.user_credentials[username][1] += 1
+            self.user_credentials[username]['login_status'] = True
             return "You have successfully logged in"
         return "Incorrect username / password, please try again."
-
+    
     #---------------- epic 1 -----------------#
 
     def get_post_login_options(self):
@@ -73,10 +76,13 @@ class InCollegeApp:
             "3. Learn a new skill",
             "4. Useful Links",
             "5. InCollege Important Links",
-            "6. Log out / return to previous level"
+            "6. Log out"
         ]
         select_option = "\n".join(options_list)
-        return select_option
+        print(select_option)
+        selected_option = input("Select an option: ")
+        self.select_option(selected_option)
+        
 
     def select_option(self, option_number):
         under_construction_message = "Under construction."
@@ -85,15 +91,16 @@ class InCollegeApp:
         if option_number == "1":
             return under_construction_message
         elif option_number == "2":
-            print(self.find_person())
+            self.find_person()
         elif option_number == "3":
-            print(self.list_skills())
+            self.list_skills()
         elif option_number == "4":
-            print(self.display_useful_links())
+            self.display_useful_links()
         elif option_number == "5":
-            print(self.display_important_links())
+            self.display_important_links()
         elif option_number == "6":
-            return "You have been logged out."
+            print("You have successfully logged out.")
+            self.main_menu()
             # or return self.main_menu() for future development
         else:
             return "Invalid Option"
@@ -110,13 +117,13 @@ class InCollegeApp:
         skill_options = "\n".join(skills)
         print(skill_options)
         print("\nSelect a skill to learn.")
-        print(self.select_skill(input("Enter a number: ")))
+        self.select_skill(input("Enter a number: "))
     
     def select_skill(self, skill_number):
         if skill_number in ["1", "2", "3", "4", "5"]:
             return self.under_construction()
         elif skill_number == "6":
-            print(self.get_post_login_options())
+            self.get_post_login_options()
         else:
             return "Invalid Option"
         
@@ -128,7 +135,8 @@ class InCollegeApp:
 
         play_video_option = input("Would you like to watch a video? (yes/no): ")
         if play_video_option.lower() == "yes":
-            return "Video is now playing."
+            print("Video is now playing.")
+            return
         else:
             return "Thank you for visiting InCollege."
         
@@ -189,29 +197,31 @@ class InCollegeApp:
         if choice == "1":
             username = input("Enter your username: ")
             password = input("Enter your password: ")
-            print(self.create_account(username, password))
+            self.create_account(username, password)
         elif choice == "2":
             username = input("Enter your username: ")
             password = input("Enter your password: ")
             login_result = self.login(username, password)
             print(login_result)
             if login_result == "You have successfully logged in":
-                print(self.get_post_login_options())
-                option = input("Select an option: ")
-                print(self.select_option(option, username))
+                self.get_post_login_options()
         elif choice == "3":
-            print(self.display_success_story_and_video_option())
+            self.display_success_story_and_video_option()
         elif choice == "4":
             print("Thank you for visiting InCollege.")
+            return
         elif choice == "5":
-            print(self.display_useful_links())
+            self.display_useful_links()
         elif choice == "6":
-            print(self.display_important_links())
+            self.display_important_links()
         else:
-            print("Invalid Option")
+            return "Invalid Option"
 
     #---------------- epic 3 -----------------# task 1 and 2 from Kainan
     
+    def any_user_logged_in(self):
+        return any(user_info['login_status'] for user_info in self.user_credentials.values())
+
     def translate_language(self, message):
         return self.translations.get(self.current_language, {}).get(message, message)
     
@@ -224,18 +234,59 @@ class InCollegeApp:
             "2. Browse InCollege",
             "3. Business Solutions",
             "4. Directories",
-            "5. Return to previous level"
+            "5. return to previous level"
         ]
         useful_links_options = "\n".join(useful_links)
         print(useful_links_options)
         print("\nSelect a link to view.")
-        print(self.select_useful_link(input("Enter a number: ")))
+        selected_link = input("Enter a number: ")
+        self.select_useful_link(selected_link)
         
     def select_useful_link(self, link_number):
-        if link_number in ["1", "2", "3", "4"]:
+        if link_number == "1":
+            self.display_general_links()
+        elif link_number in ["2", "3", "4"]:
             return self.under_construction()
         elif link_number == "5":
-            print(self.get_post_login_options())
+            if self.any_user_logged_in():
+                self.get_post_login_options()
+            else:
+                self.main_menu()
+        else:
+            return "Invalid Option"
+        
+    def display_general_links(self):
+        general_links = [
+            "1. Sign up",
+            "2. Help Center",
+            "3. About",
+            "4. Press",
+            "5. Blog",
+            "6. Careers",
+            "7. Developers",
+            "8. Go back to previous level"
+        ]
+        general_links_options = "\n".join(general_links)
+        print(general_links_options)
+        print("\nSelect a link to view.")
+        selected_link = input("Enter a number: ")
+        self.select_general_link(selected_link)
+        
+    def select_general_link(self, link_number):
+        if link_number == "1":
+            username = input("Enter your username: ")
+            password = input("Enter your password: ")
+            self.create_account(username, password)
+        elif link_number == "2":
+            print("\nWe're here to help")
+        elif link_number == "3":
+            print("\nIn College: Welcome to In College, the world's largest college student network with many users in many countries and territories worldwide")
+        elif link_number == "4":
+            print("\nIn College Pressroom: Stay on top of the latest news, updates, and reports")
+        elif link_number in ["5", "6", "7"]:
+            return self.under_construction()
+        elif link_number == "8":
+            self.display_useful_links()
         else:
             return "Invalid Option"
     
@@ -245,17 +296,52 @@ class InCollegeApp:
             "2. About",
             "3. Brand Policy",
             "4. Guest Controls",
-            "5. Languages"
+            "5. Languages",
+            "6. return to previous level"
         ]
         important_links_options = "\n".join(important_links)
         print(important_links_options)
         print("\nSelect a link to view.")
-        print(self.select_important_link(input("Enter a number: ")))
+        selected_link = input("Enter a number: ")
+        self.select_important_link(selected_link)
     
     def select_important_link(self, link_number):
         if link_number in ["1", "2", "3", "4"]:
             return self.under_construction()
         elif link_number == "5":
-            print(self.display_languages())
+            self.display_languages()
+        elif link_number == "6":
+            if self.any_user_logged_in():
+                self.get_post_login_options()
+            else:
+                self.main_menu()
         else:
             return "Invalid Option"
+        
+    def display_languages(self):
+        languages = [
+            "1. English",
+            "2. Spanish"
+        ]
+        languages_options = "\n".join(languages)
+        print(languages_options)
+        print("\nSelect a language.")
+        selected_language = input("Enter a number: ")
+        self.select_language(selected_language)
+        
+    def select_language(self, language_number):
+        if language_number in ["1", "2"]:
+            return self.set_language(language_number)
+        else:
+            return "Invalid Option"
+    
+    def set_language(self, language_number):
+        if language_number == "1":
+            self.current_language = "English"
+        elif language_number == "2":
+            self.current_language = "Spanish"
+        
+        if self.any_user_logged_in():
+            self.get_post_login_options()
+        else:
+            self.main_menu()
