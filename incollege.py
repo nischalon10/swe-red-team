@@ -78,11 +78,12 @@ class InCollegeApp:
         select_option = "\n".join(options_list)
         return select_option
 
-    def select_option(self, option_number, username):
+    def select_option(self, option_number):
+        under_construction_message = "Under construction."
 
         # added a new option to the list #4 for epic#2
         if option_number == "1":
-            print(self.post_job(username))
+            return under_construction_message
         elif option_number == "2":
             print(self.find_person())
         elif option_number == "3":
