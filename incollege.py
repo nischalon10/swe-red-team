@@ -248,9 +248,9 @@ class InCollegeApp:
             "5. return to previous level"
         ]
         useful_links_options = "\n".join(useful_links)
-        print(useful_links_options)
-        print("\nSelect a link to view.")
-        selected_link = input("Enter a number: ")
+        print(self.translate_language(useful_links_options))
+        print(self.translate_language("\nSelect a link to view."))
+        selected_link = input(self.translate_language("Enter a number: "))
         self.select_useful_link(selected_link)
         
     def select_useful_link(self, link_number):
@@ -278,22 +278,22 @@ class InCollegeApp:
             "8. Go back to previous level"
         ]
         general_links_options = "\n".join(general_links)
-        print(general_links_options)
-        print("\nSelect a link to view.")
-        selected_link = input("Enter a number: ")
+        print(self.translate_language(general_links_options))
+        print(self.translate_language("\nSelect a link to view."))
+        selected_link = input(self.translate_language("Enter a number: "))
         self.select_general_link(selected_link)
         
     def select_general_link(self, link_number):
         if link_number == "1":
-            username = input("Enter your username: ")
-            password = input("Enter your password: ")
+            username = input(self.translate_language("Enter your username: "))
+            password = input(self.translate_language("Enter your password: "))
             self.create_account(username, password)
         elif link_number == "2":
-            print("\nWe're here to help")
+            print(self.translate_language("\nWe're here to help"))
         elif link_number == "3":
-            print("\nIn College: Welcome to In College, the world's largest college student network with many users in many countries and territories worldwide")
+            print(self.translate_language("\nIn College: Welcome to In College, the world's largest college student network with many users in many countries and territories worldwide"))
         elif link_number == "4":
-            print("\nIn College Pressroom: Stay on top of the latest news, updates, and reports")
+            print(self.translate_language("\nIn College Pressroom: Stay on top of the latest news, updates, and reports"))
         elif link_number in ["5", "6", "7"]:
             print(self.under_construction())
         elif link_number == "8":
