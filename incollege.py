@@ -4,9 +4,21 @@ import re
 
 class InCollegeApp:
     def __init__(self):
-        self.user_credentials = {}  # Dictionary to store username and password
+        self.user_credentials = {
+            "test" : {
+                'password': "test",
+                'first_name': "test",
+                'last_name': "test"
+            },
+        }  # Dictionary to store username and password
         self.MAX_ACCOUNTS = 5  # Maximum number of accounts
         self.job_posts = []  # List to store job posts
+        
+        self.current_language = "English"  # Default language
+        self.translations = {
+            "English": {},
+            "Spanish": {}
+        }
 
     def create_account(self, username, password):
         # Check if maximum number of accounts has been reached
@@ -32,7 +44,9 @@ class InCollegeApp:
             'last_name': last_name
         }
 
-        return "Account created successfully"
+        print("Account created successfully")
+        print(self.get_post_login_options())
+        
         
         # [old code]
         # Check if username already exists
@@ -56,23 +70,28 @@ class InCollegeApp:
         options_list = [
             "1. Job search/Internship",
             "2. Find someone you know",
-            "3. Learn a new skill"
-            "4. Log out / return to previous level"
+            "3. Learn a new skill",
+            "4. Useful Links",
+            "5. InCollege Important Links",
+            "6. Log out / return to previous level"
         ]
         select_option = "\n".join(options_list)
         return select_option
 
-    def select_option(self, option_number):
-        under_construction_message = "Under construction."
+    def select_option(self, option_number, username):
 
         # added a new option to the list #4 for epic#2
         if option_number == "1":
-            return under_construction_message
+            print(self.post_job(username))
         elif option_number == "2":
-            return self.find_person()
+            print(self.find_person())
         elif option_number == "3":
-            return self.list_skills()
+            print(self.list_skills())
         elif option_number == "4":
+            print(self.display_useful_links())
+        elif option_number == "5":
+            print(self.display_important_links())
+        elif option_number == "6":
             return "You have been logged out."
             # or return self.main_menu() for future development
         else:
@@ -88,14 +107,15 @@ class InCollegeApp:
             "6. return to previous level"
         ]
         skill_options = "\n".join(skills)
-        return skill_options + "\nSelect a skill to learn."
+        print(skill_options)
+        print("\nSelect a skill to learn.")
+        print(self.select_skill(input("Enter a number: ")))
     
     def select_skill(self, skill_number):
-        under_construction_message = "Under construction."
         if skill_number in ["1", "2", "3", "4", "5"]:
-            return under_construction_message
+            return self.under_construction()
         elif skill_number == "6":
-            return self.get_post_login_options()
+            print(self.get_post_login_options())
         else:
             return "Invalid Option"
         
@@ -111,6 +131,28 @@ class InCollegeApp:
         else:
             return "Thank you for visiting InCollege."
         
+    def post_job(self,username):
+        if len(self.job_posts) >= 5:
+            print("Maximum number of jobs posted. Please try again later.")
+            return
+
+        title = input("Enter job title: ")
+        description = input("Enter job description: ")
+        employer = input("Enter employer: ")
+        location = input("Enter location: ")
+        salary = input("Enter salary: ")
+
+        self.job_posts.append({
+            'title': title,
+            'description': description,
+            'employer': employer,
+            'location': location,
+            'salary': salary,
+            'username': username
+        })
+
+        print("Job posted successfully.")
+    
     def find_person(self):
         first_name = input("Enter the first name of the person you are looking for: ")
         last_name = input("Enter the last name of the person you are looking for: ")
@@ -122,12 +164,14 @@ class InCollegeApp:
     
     def main_menu(self):
         menu_options = [
-            "Welcome to InCollege",
-            "Main Menu",
+            self.translate_language("Welcome to InCollege"),
+            self.translate_language("Main Menu"),
             "1. Create Account",
             "2. Login",
             "3. View Success Story and Video",
-            "4. Exit"
+            "4. Exit",
+            "5. Useful Links",
+            "6. InCollege Important Links"
         ]
         menu = "\n".join(menu_options)
         print(menu)
@@ -153,10 +197,64 @@ class InCollegeApp:
             if login_result == "You have successfully logged in":
                 print(self.get_post_login_options())
                 option = input("Select an option: ")
-                print(self.select_option(option))
+                print(self.select_option(option, username))
         elif choice == "3":
             print(self.display_success_story_and_video_option())
         elif choice == "4":
             print("Thank you for visiting InCollege.")
+        elif choice == "5":
+            print(self.display_useful_links())
+        elif choice == "6":
+            print(self.display_important_links())
         else:
             print("Invalid Option")
+
+    #---------------- epic 3 -----------------# task 1 and 2 from Kainan
+    
+    def translate_language(self, message):
+        return self.translations.get(self.current_language, {}).get(message, message)
+    
+    def under_construction(self):
+        return self.translate_language("Under construction.")
+    
+    def display_useful_links(self):
+        useful_links = [
+            "1. General",
+            "2. Browse InCollege",
+            "3. Business Solutions",
+            "4. Directories",
+            "5. Return to previous level"
+        ]
+        useful_links_options = "\n".join(useful_links)
+        print(useful_links_options)
+        print("\nSelect a link to view.")
+        print(self.select_useful_link(input("Enter a number: ")))
+        
+    def select_useful_link(self, link_number):
+        if link_number in ["1", "2", "3", "4"]:
+            return self.under_construction()
+        elif link_number == "5":
+            print(self.get_post_login_options())
+        else:
+            return "Invalid Option"
+    
+    def display_important_links(self):
+        important_links = [
+            "1. Copyright Notice",
+            "2. About",
+            "3. Brand Policy",
+            "4. Guest Controls",
+            "5. Languages"
+        ]
+        important_links_options = "\n".join(important_links)
+        print(important_links_options)
+        print("\nSelect a link to view.")
+        print(self.select_important_link(input("Enter a number: ")))
+    
+    def select_important_link(self, link_number):
+        if link_number in ["1", "2", "3", "4"]:
+            return self.under_construction()
+        elif link_number == "5":
+            print(self.display_languages())
+        else:
+            return "Invalid Option"
