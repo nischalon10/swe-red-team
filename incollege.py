@@ -34,7 +34,7 @@ class InCollegeApp:
     def create_account(self, username, password):
         # Check if maximum number of accounts has been reached
         if len(self.user_credentials) >= self.MAX_ACCOUNTS:
-            return "Maximum number of student accounts created."
+            return self.translate_language("Maximum number of student accounts created.")
 
         # restrictions for password
         if len(password) < 8 or len(password) > 13:
@@ -180,6 +180,7 @@ class InCollegeApp:
         print(self.translate_language("They are not a part of the InCollege system."))
     
     def main_menu(self):
+        self.choose_language()
         menu_options = [
             "Welcome to InCollege",
             "Main Menu",
