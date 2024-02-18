@@ -9,7 +9,7 @@ git clone <repo-url>
 ```
 
 ```bash
-$ pip install -U deep-translator
+$ pip install -U -r requirements.txt
 ```
 
 ## Running The App
