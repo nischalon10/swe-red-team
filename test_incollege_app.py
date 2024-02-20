@@ -267,3 +267,40 @@ def test_main_menu_invalid(app, capfd, monkeypatch):
 
 # ----------------- Epic 3 ----------------- #
 
+def test_any_user_logged_in(self, app_instance):
+        # Ensure the method returns a boolean value
+        result = app_instance.any_user_logged_in()
+        assert isinstance(result, bool)
+
+    def test_translate_language(self, app_instance):
+        # Ensure the method returns a string
+        msg = "Hello, World!"
+        result = app_instance.translate_language(msg)
+        assert isinstance(result, str)
+
+    def test_under_construction(self, app_instance):
+        # Ensure the method returns a string
+        result = app_instance.under_construction()
+        assert isinstance(result, str)
+
+    def test_display_useful_links(self, app_instance, capsys, monkeypatch):
+        # Simulate user input to select a link
+        monkeypatch.setattr('builtins.input', lambda _: "1")
+        app_instance.display_useful_links()
+
+        # Capture the output and check if it contains the expected options menu
+        captured = capsys.readouterr()
+        assert "1. General" in captured.out  # Adjust based on actual output
+
+
+    def test_select_useful_link(self, app_instance, monkeypatch, capsys):
+        # Simulate user input to select a link
+        monkeypatch.setattr('builtins.input', lambda _: "1")
+      
+        # Check if the method performs the expected action
+        app_instance.select_useful_link("1")
+      
+        # Capture the output and check if it contains the expected options menu
+        captured = capsys.readouterr()
+        assert "1. Sign up" in captured.out  # Adjust based on actual output
+
