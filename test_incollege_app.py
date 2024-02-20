@@ -272,18 +272,18 @@ def test_any_user_logged_in(self, app_instance):
         result = app_instance.any_user_logged_in()
         assert isinstance(result, bool)
 
-    def test_translate_language(self, app_instance):
+def test_translate_language(self, app_instance):
         # Ensure the method returns a string
         msg = "Hello, World!"
         result = app_instance.translate_language(msg)
         assert isinstance(result, str)
 
-    def test_under_construction(self, app_instance):
+def test_under_construction(self, app_instance):
         # Ensure the method returns a string
         result = app_instance.under_construction()
         assert isinstance(result, str)
 
-    def test_display_useful_links(self, app_instance, capsys, monkeypatch):
+def test_display_useful_links(self, app_instance, capsys, monkeypatch):
         # Simulate user input to select a link
         monkeypatch.setattr('builtins.input', lambda _: "1")
         app_instance.display_useful_links()
@@ -293,7 +293,7 @@ def test_any_user_logged_in(self, app_instance):
         assert "1. General" in captured.out  # Adjust based on actual output
 
 
-    def test_select_useful_link(self, app_instance, monkeypatch, capsys):
+def test_select_useful_link(self, app_instance, monkeypatch, capsys):
         # Simulate user input to select a link
         monkeypatch.setattr('builtins.input', lambda _: "1")
       
