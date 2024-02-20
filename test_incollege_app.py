@@ -265,4 +265,154 @@ def test_main_menu_invalid(app, capfd, monkeypatch):
     out, err = capfd.readouterr()
     assert "Invalid Option" in out, "Invalid option should be handled correctly"
 
+# ----------------- Epic 3 ----------------- Felicia #
 
+def test_any_user_logged_in_with_logged_in_user(app):
+    # Assuming user_credentials is properly set up with at least one user logged in
+    app.user_credentials = {
+        "user1": {"login_status": True},
+        "user2": {"login_status": False}
+    }
+    assert app.any_user_logged_in() == True
+
+def test_any_user_logged_in_with_no_logged_in_user(app):
+    # Assuming user_credentials is properly set up with no user logged in
+    app.user_credentials = {
+        "user1": {"login_status": False},
+        "user2": {"login_status": False}
+    }
+    assert app.any_user_logged_in() == False
+
+def test_under_construction(app):
+    assert app.under_construction() == "Under construction."
+
+def test_select_general_link_help_message(app, capfd):
+    app.select_general_link("2")
+    out, _ = capfd.readouterr()
+    assert "We're here to help" in out, "Help message should be displayed"
+
+def test_select_useful_link_under_construction(app, monkeypatch, capfd):
+    for link_number in ["2", "3", "4"]:
+        monkeypatch.setattr('builtins.input', lambda _: link_number)
+        app.select_useful_link(link_number)
+        out, _ = capfd.readouterr()
+        assert "Under construction" in out, f"Option {link_number} should be under construction"
+
+def test_select_useful_link_invalid_option(app, monkeypatch, capfd):
+    monkeypatch.setattr('builtins.input', lambda _: "invalid")
+    app.select_useful_link("invalid")
+    out, _ = capfd.readouterr()
+    assert "Invalid Option" in out, "Invalid Option should be displayed"
+
+def test_select_general_link_help_center():
+    link_number = "2"
+    expected_output = "We're here to help"
+    
+    instance = InCollegeApp()  # Instantiate your class
+    with patch('builtins.print') as mock_print:
+        instance.select_general_link(link_number)
+        mock_print.assert_called_with(instance.translate_language("\n" + expected_output))
+
+def test_select_general_link_about():
+    link_number = "3"
+    expected_output = "In College: Welcome to In College, the world's largest college student network with many users in many countries and territories worldwide"
+    
+    instance = InCollegeApp()  # Instantiate your class
+    with patch('builtins.print') as mock_print:
+        instance.select_general_link(link_number)
+        mock_print.assert_called_with(instance.translate_language("\n" + expected_output))
+
+def test_select_general_link_pressroom():
+    link_number = "4"
+    expected_output = "In College Pressroom: Stay on top of the latest news, updates, and reports"
+    
+    instance = InCollegeApp()  # Instantiate your class
+    with patch('builtins.print') as mock_print:
+        instance.select_general_link(link_number)
+        mock_print.assert_called_with(instance.translate_language("\n" + expected_output))
+
+def test_select_general_link_display_useful_links():
+    link_number = "8"
+    
+    instance = InCollegeApp()  # Instantiate your class
+    with patch.object(instance, 'display_useful_links') as mock_display_useful_links:
+        instance.select_general_link(link_number)
+        mock_display_useful_links.assert_called_once()
+
+def test_select_general_link_invalid_option():
+    link_number = "9"
+    expected_output = "Invalid Option"
+    
+    instance = InCollegeApp()  # Instantiate your class
+    with patch('builtins.print') as mock_print:
+        instance.select_general_link(link_number)
+        mock_print.assert_called_with(instance.translate_language(expected_output))
+
+
+"""
+FOR TESTING WHEN CONSISTENCY WITH PRINT AND RETURN. THESE TESTS DO NOT WORK BECAUSE OF RETURN FUNCTIONS
+INSTEAD OF PRINT. REVISIT AT SCRUM NEXT WEEK FOR DETAILS.
+
+@pytest.mark.parametrize("selected_option, expected_output", [
+    ("1", "Copyright Notice"),
+    ("2", "About"),
+    ("3", "Accessibility"),
+    ("4", "User Agreement"),
+    ("5", "Privacy Policy"),
+    ("6", "Cookie Policy"),
+    ("7", "Copyright Policy"),
+    ("8", "Brand Policy"),
+    ("9", "Back to previous")
+])
+def test_important_links(selected_option, expected_output):
+    expected_prompt = "Select a link to visit."
+    instance = InCollegeApp()  # Instantiate your class
+    with patch('builtins.input', lambda _: selected_option), patch('builtins.print') as mock_print:
+        instance.important_links()
+        mock_print.assert_called_with(instance.translate_language(expected_output))
+    out, _ = mock_print.call_args.args
+    assert expected_prompt in out, "Prompt to select a link should be displayed"
+
+@pytest.mark.parametrize("selected_option, expected_output", [
+    ("1", "Email"),
+    ("2", "SMS"),
+    ("3", "Targeted Advertising"),
+    ("4", "Back to previous")
+])
+def test_guest_controls(selected_option, expected_output):
+    expected_prompt = "Select a setting to change."
+    instance = InCollegeApp()  # Instantiate your class
+    with patch('builtins.input', lambda _: selected_option), patch('builtins.print') as mock_print:
+        instance.guest_controls()
+        mock_print.assert_called_with(instance.translate_language(expected_output))
+    out, _ = mock_print.call_args.args
+    assert expected_prompt in out, "Prompt to select a setting should be displayed"
+
+def test_select_useful_link_under_construction():
+    for link_number in ["2", "3", "4"]:
+        expected_output = "Under construction"
+        instance = InCollegeApp()  # Instantiate your class
+        with patch('builtins.print') as mock_print:
+            instance.select_useful_link(link_number)
+            mock_print.assert_called_with(instance.translate_language(expected_output))
+
+@pytest.mark.parametrize("user_logged_in, expected_output", [
+    (True, "Post login options"),
+    (False, "Main menu")
+])
+def test_select_useful_link_any_user_logged_in(user_logged_in, expected_output):
+    instance = InCollegeApp()  # Instantiate your class
+    with patch('builtins.input', lambda _: "5"), patch.object(instance, 'any_user_logged_in', return_value=user_logged_in), patch('builtins.print') as mock_print:
+        result = instance.select_useful_link()
+        assert result == expected_output, f"Expected output: {expected_output}"
+        mock_print.assert_called_with(expected_output)
+
+def test_select_useful_link_invalid_option():
+    expected_output = "Invalid Option"
+    instance = InCollegeApp()  # Instantiate your class
+    with patch('builtins.input', lambda _: "invalid"), patch('builtins.print') as mock_print:
+        instance.select_useful_link("invalid")
+        mock_print.assert_called_with(instance.translate_language(expected_output))
+"""
+
+# ----------------- Epic 3 ----------------- Muhannad #
