@@ -418,3 +418,8 @@ class InCollegeApp:
             return f"Language has been set to {language}."
         else:
             return "Invalid language. Please choose English or Spanish."
+
+# ----------------------- epic 4 -----------------------#
+
+def random():
+    print("random")
