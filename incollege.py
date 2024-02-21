@@ -422,4 +422,4 @@ class InCollegeApp:
 # ----------------------- epic 4 -----------------------#
 
 def random():
-    print("random")
+    print("random making user profile")
