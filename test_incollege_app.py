@@ -265,7 +265,44 @@ def test_main_menu_invalid(app, capfd, monkeypatch):
     out, err = capfd.readouterr()
     assert "Invalid Option" in out, "Invalid option should be handled correctly"
 
-# ----------------- Epic 3 ----------------- Felicia #
+# ----------------- Epic 3 -----------------  #
+
+def test_any_user_logged_in(app):
+        # Ensure the method returns a boolean value
+        result = app.any_user_logged_in()
+        assert isinstance(result, bool)
+
+def test_translate_language(app):
+        # Ensure the method returns a string
+        msg = "Hello, World!"
+        result = app.translate_language(msg)
+        assert isinstance(result, str)
+
+def test_under_construction(app):
+        # Ensure the method returns a string
+        result = app.under_construction()
+        assert isinstance(result, str)
+
+def test_display_useful_links(app, capsys, monkeypatch):
+        # Simulate user input to select a link
+        monkeypatch.setattr('builtins.input', lambda _: "1")
+        app.display_useful_links()
+
+        # Capture the output and check if it contains the expected options menu
+        captured = capsys.readouterr()
+        assert "1. General" in captured.out  # Adjust based on actual output
+
+
+def test_select_useful_link(app, monkeypatch, capsys):
+        # Simulate user input to select a link
+        monkeypatch.setattr('builtins.input', lambda _: "1")
+      
+        # Check if the method performs the expected action
+        app.select_useful_link("1")
+      
+        # Capture the output and check if it contains the expected options menu
+        captured = capsys.readouterr()
+        assert "1. Sign up" in captured.out  # Adjust based on actual output
 
 def test_any_user_logged_in_with_logged_in_user(app):
     # Assuming user_credentials is properly set up with at least one user logged in
@@ -415,41 +452,3 @@ def test_select_useful_link_invalid_option():
         mock_print.assert_called_with(instance.translate_language(expected_output))
 """
 
-# ----------------- Epic 3 ----------------- Muhannad #
-
-def test_any_user_logged_in(app):
-        # Ensure the method returns a boolean value
-        result = app.any_user_logged_in()
-        assert isinstance(result, bool)
-
-def test_translate_language(app):
-        # Ensure the method returns a string
-        msg = "Hello, World!"
-        result = app.translate_language(msg)
-        assert isinstance(result, str)
-
-def test_under_construction(app):
-        # Ensure the method returns a string
-        result = app.under_construction()
-        assert isinstance(result, str)
-
-def test_display_useful_links(app, capsys, monkeypatch):
-        # Simulate user input to select a link
-        monkeypatch.setattr('builtins.input', lambda _: "1")
-        app.display_useful_links()
-
-        # Capture the output and check if it contains the expected options menu
-        captured = capsys.readouterr()
-        assert "1. General" in captured.out  # Adjust based on actual output
-
-
-def test_select_useful_link(app, monkeypatch, capsys):
-        # Simulate user input to select a link
-        monkeypatch.setattr('builtins.input', lambda _: "1")
-      
-        # Check if the method performs the expected action
-        app.select_useful_link("1")
-      
-        # Capture the output and check if it contains the expected options menu
-        captured = capsys.readouterr()
-        assert "1. Sign up" in captured.out  # Adjust based on actual output
