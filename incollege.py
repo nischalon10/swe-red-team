@@ -13,8 +13,9 @@ class InCollegeApp:
                 'login_status': False
             },
         }  # Dictionary to store username and password
-        self.MAX_ACCOUNTS = 5  # Maximum number of accounts
+        self.MAX_ACCOUNTS = 10  # Maximum number of accounts
         self.job_posts = []  # List to store job posts
+        self.friends = []  # List to store friends
         
         self.language = "english"  # Default language
         self.email = False  # Email notification status
@@ -86,7 +87,8 @@ class InCollegeApp:
             "3. Learn a new skill",
             "4. Useful Links",
             "5. InCollege Important Links",
-            "6. Log out"
+            "6. Friends List",
+            "7. Log out"
         ]
         select_option = "\n".join(options_list)
         print(self.translate_language(select_option))
@@ -108,6 +110,8 @@ class InCollegeApp:
         elif option_number == "5":
             self.important_links()
         elif option_number == "6":
+            self.friends_list()
+        elif option_number == "7":
             print(self.translate_language("You have successfully logged out."))
             self.main_menu()
             # or return self.main_menu() for future development
@@ -225,7 +229,7 @@ class InCollegeApp:
         else:
             print(self.translate_language("Invalid Option"))
 
-    #---------------- epic 3 -----------------# task 1 and 2 from Kainan
+    #---------------- epic 3 --------------------------------#
     
     def any_user_logged_in(self):
         return any(user_info['login_status'] for user_info in self.user_credentials.values())
@@ -361,7 +365,6 @@ class InCollegeApp:
             self.main_menu()
             
     """
-    #---------------- epic 3 -----------------# task 3 and 4 from Vynze
     
     def important_links(self):
         links = [
@@ -420,6 +423,16 @@ class InCollegeApp:
             return "Invalid language. Please choose English or Spanish."
 
 # ----------------------- epic 4 -----------------------#
+        
+    # task 1 above
+    # ------------- task 2 -------------------------------#
 
-def random():
-    print("random making user profile")
+
+    def friends_list(self):
+        if self.friends == []:
+            return self.translate_language("You currently have no friends.")
+        else:
+            for friend in self.friends:
+                print(friend)
+            return self.translate_language("End of friends list.")
+        
