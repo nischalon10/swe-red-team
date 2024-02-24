@@ -29,13 +29,13 @@ def test_account_creation_with_invalid_password_special(app):
     result = app.create_account("user2", "passW0rds")
     assert "Password must" in result, "Account should not be created with an invalid password"
 
-def test_account_creation_limit(app, monkeypatch):
-    monkeypatch.setattr('builtins.input', lambda _: "User1")
-    for i in range(1, 6):
-        app.create_account(f"user{i}", "ValidPass123!")
+# def test_account_creation_limit(app, monkeypatch):
+#     monkeypatch.setattr('builtins.input', lambda _: "User1")
+#     for i in range(1, 6):
+#         app.create_account(f"user{i}", "ValidPass123!")
 
-    result = app.create_account("user6", "ValidPass123!")
-    assert result == "Maximum number of student accounts created.", "Should not allow creating more than 5 accounts"
+#     result = app.create_account("user6", "ValidPass123!")
+#     assert result == "Maximum number of student accounts created.", "Should not allow creating more than 5 accounts"
 
 def test_successful_login(app, monkeypatch):
     monkeypatch.setattr('builtins.input', lambda _: "user1")
@@ -384,6 +384,36 @@ def test_select_general_link_invalid_option():
     with patch('builtins.print') as mock_print:
         instance.select_general_link(link_number)
         mock_print.assert_called_with(instance.translate_language(expected_output))
+        
+# ----------------- Epic 3 -----------------  #
+        
+def test_account_creation_limit(app, monkeypatch):
+    monkeypatch.setattr('builtins.input', lambda _: "User1")
+    for i in range(1, 11):
+        app.create_account(f"user{i}", "ValidPass123!")
+
+    result = app.create_account("user11", "ValidPass123!")
+    assert result == "Maximum number of student accounts created.", "Should not allow creating more than 10 accounts"
+
+def test_friends_list_no_friends(app):
+    app.friends = []
+    with patch('incollege.InCollegeApp.translate_language') as mocked_translate_language:
+        mocked_translate_language.return_value = "Translated message"
+        result = app.friends_list()
+        mocked_translate_language.assert_called_with("You currently have no friends.")
+        assert result == "Translated message"
+
+def test_friends_list_with_friends(app):
+    app.friends = ['Alice', 'Bob', 'Charlie']
+    with patch('incollege.InCollegeApp.translate_language') as mocked_translate_language:
+        mocked_translate_language.return_value = "Translated message"
+        with patch('builtins.print') as mocked_print:
+            result = app.friends_list()
+            mocked_translate_language.assert_called_with("End of friends list.")
+            assert result == "Translated message"
+            mocked_print.assert_any_call('Alice')
+            mocked_print.assert_any_call('Bob')
+            mocked_print.assert_any_call('Charlie')
 
 
 """
