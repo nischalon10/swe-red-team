@@ -37,6 +37,7 @@ class InCollegeApp:
           
         }
         # Add more student records as needed
+        # Added students 
     ]
       
     
@@ -554,21 +555,6 @@ class InCollegeApp:
     else:
       return self.translate_language("Invalid sender or receiver username.")
 
-  def notify_friend_request(self, receiver_username, sender_name):
-    # Your implementation to notify the receiver about the incoming friend request
-    # This could be through email, in-app notification, etc.
-    # Implement as needed for your notification system
-    pass
-
-  def ensure_privacy_and_permissions(self, sender_username, receiver_username):
-    # Your implementation to ensure privacy and permissions when sending requests
-    # Check if sender and receiver are valid and have appropriate login status, etc.
-    pass
-
-  def write_unit_tests_search_and_request(self):
-    # Your implementation to write unit tests for the search and request functionality
-    # Ensure that the functions work as expected
-    pass
 
 # ------------------ task4 ----------------------------------------
   def manage_pending_friend_requests(self, username):
