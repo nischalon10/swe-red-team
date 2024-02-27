@@ -385,7 +385,7 @@ def test_select_general_link_invalid_option():
         instance.select_general_link(link_number)
         mock_print.assert_called_with(instance.translate_language(expected_output))
         
-# ----------------- Epic 3 -----------------  #
+# ----------------- Epic 4 -----------------  #
         
 def test_account_creation_limit(app, monkeypatch):
     monkeypatch.setattr('builtins.input', lambda _: "User1")
@@ -414,71 +414,83 @@ def test_friends_list_with_friends(app):
             mocked_print.assert_any_call('Alice')
             mocked_print.assert_any_call('Bob')
             mocked_print.assert_any_call('Charlie')
+            
+# ---- F----
+
+def test_search_by_last_name(app):
+    # Create a mock list of students
+    app.matching_students = [
+        {'first_name': 'John', 'last_name': 'Doe', 'university': 'Stanford', 'major': 'Computer Science'},
+        {'first_name': 'Alice', 'last_name': 'Smith', 'university': 'MIT', 'major': 'Electrical Engineering'},
+        {'first_name': 'Bob', 'last_name': 'Jones', 'university': 'Harvard', 'major': 'Biology'}
+    ]
+    
+    result = app.search_students(last_name='Doe')
+    assert len(result) == 1
+    assert result[0]['first_name'] == 'John'
 
 
-"""
-FOR TESTING WHEN CONSISTENCY WITH PRINT AND RETURN. THESE TESTS DO NOT WORK BECAUSE OF RETURN FUNCTIONS
-INSTEAD OF PRINT. REVISIT AT SCRUM NEXT WEEK FOR DETAILS.
+def test_search_and_connect_friends(app, monkeypatch, capsys):
+    search_results = [{'first_name': 'John', 'last_name': 'Doe', 'email': 'john@example.com', 'university': 'Stanford', 'major': 'Computer Science'}]
+    with patch.object(app, 'translate_language') as mocked_translate_language:
+        mocked_translate_language.return_value = "Find someone you know"
+        user_inputs = ['last name', 'Doe', 'yes']
+        monkeypatch.setattr('builtins.input', lambda _: user_inputs.pop(0))
+        with patch.object(app, 'search_students') as mocked_search_students:
+            mocked_search_students.return_value = search_results  
+            app.search_and_connect_friends()
+    captured = capsys.readouterr()
+    assert "Find someone you know" in captured.out
+    assert "Do you want to search by last name, university, or major? " not in captured.out
+   
+def test_send_friend_request_success(app):
+    app.user_credentials = {
+        'sender_username': {'login_status': True, 'first_name': 'Sender', 'last_name': 'User'},
+        'receiver_username': {'login_status': True, 'first_name': 'Receiver', 'last_name': 'User'}
+    }
+    
+    result = app.send_friend_request('sender_username', 'receiver_username')
+    assert result == "Friend request sent to Receiver User."
+    assert len(app.friends) == 1
+    assert app.friends[0] == {'sender_username': 'sender_username', 'receiver_username': 'receiver_username'}
 
-@pytest.mark.parametrize("selected_option, expected_output", [
-    ("1", "Copyright Notice"),
-    ("2", "About"),
-    ("3", "Accessibility"),
-    ("4", "User Agreement"),
-    ("5", "Privacy Policy"),
-    ("6", "Cookie Policy"),
-    ("7", "Copyright Policy"),
-    ("8", "Brand Policy"),
-    ("9", "Back to previous")
-])
-def test_important_links(selected_option, expected_output):
-    expected_prompt = "Select a link to visit."
-    instance = InCollegeApp()  # Instantiate your class
-    with patch('builtins.input', lambda _: selected_option), patch('builtins.print') as mock_print:
-        instance.important_links()
-        mock_print.assert_called_with(instance.translate_language(expected_output))
-    out, _ = mock_print.call_args.args
-    assert expected_prompt in out, "Prompt to select a link should be displayed"
+def test_send_friend_request_sender_not_exist(app):
+    app.user_credentials = {
+        'receiver_username': {'login_status': True, 'first_name': 'Receiver', 'last_name': 'User'}
+    }
+    
+    result = app.send_friend_request('sender_username', 'receiver_username')
+    assert result == "Invalid sender or receiver username."
+    assert len(app.friends) == 0
 
-@pytest.mark.parametrize("selected_option, expected_output", [
-    ("1", "Email"),
-    ("2", "SMS"),
-    ("3", "Targeted Advertising"),
-    ("4", "Back to previous")
-])
-def test_guest_controls(selected_option, expected_output):
-    expected_prompt = "Select a setting to change."
-    instance = InCollegeApp()  # Instantiate your class
-    with patch('builtins.input', lambda _: selected_option), patch('builtins.print') as mock_print:
-        instance.guest_controls()
-        mock_print.assert_called_with(instance.translate_language(expected_output))
-    out, _ = mock_print.call_args.args
-    assert expected_prompt in out, "Prompt to select a setting should be displayed"
+def test_send_friend_request_sender_not_logged_in(app):
+    app.user_credentials = {
+        'sender_username': {'login_status': False, 'first_name': 'Sender', 'last_name': 'User'},
+        'receiver_username': {'login_status': True, 'first_name': 'Receiver', 'last_name': 'User'}
+    }
+    
+    result = app.send_friend_request('sender_username', 'receiver_username') 
+    assert result == "Cannot send friend request. Check user login status."
+    assert len(app.friends) == 0
 
-def test_select_useful_link_under_construction():
-    for link_number in ["2", "3", "4"]:
-        expected_output = "Under construction"
-        instance = InCollegeApp()  # Instantiate your class
-        with patch('builtins.print') as mock_print:
-            instance.select_useful_link(link_number)
-            mock_print.assert_called_with(instance.translate_language(expected_output))
+def test_manage_pending_friend_requests_accept(app, monkeypatch, capsys):
+    monkeypatch.setattr('builtins.input', lambda _: 'accept')
+    app.user_credentials = {
+        'test': {
+            'friend_requests': ['user1', 'user2'],
+            'friends': []
+        }
+    }
+    app.manage_pending_friend_requests('test')
+    captured = capsys.readouterr()
+    assert app.user_credentials['test']['friends'] == ['user1', 'user2']  # Updated expectation
+    assert app.user_credentials['test']['friend_requests'] == []  # User2 is removed from friend requests
+    assert "Friend request from user1 accepted." in captured.out
+    assert "updated friends list ['user1', 'user2']" in captured.out  # Updated expectation
 
-@pytest.mark.parametrize("user_logged_in, expected_output", [
-    (True, "Post login options"),
-    (False, "Main menu")
-])
-def test_select_useful_link_any_user_logged_in(user_logged_in, expected_output):
-    instance = InCollegeApp()  # Instantiate your class
-    with patch('builtins.input', lambda _: "5"), patch.object(instance, 'any_user_logged_in', return_value=user_logged_in), patch('builtins.print') as mock_print:
-        result = instance.select_useful_link()
-        assert result == expected_output, f"Expected output: {expected_output}"
-        mock_print.assert_called_with(expected_output)
+def test_manage_pending_friend_requests_no_user(app, capsys):
 
-def test_select_useful_link_invalid_option():
-    expected_output = "Invalid Option"
-    instance = InCollegeApp()  # Instantiate your class
-    with patch('builtins.input', lambda _: "invalid"), patch('builtins.print') as mock_print:
-        instance.select_useful_link("invalid")
-        mock_print.assert_called_with(instance.translate_language(expected_output))
-"""
-
+    app.user_credentials = {}
+    app.manage_pending_friend_requests('nonexistent_user')
+    captured = capsys.readouterr()
+    assert "No user found with username: nonexistent_user" in captured.out
