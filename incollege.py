@@ -127,7 +127,7 @@ class InCollegeApp:
     options_list = [
         "1. Job search/Internship", "2. Find someone you know",
         "3. Learn a new skill", "4. Useful Links",
-        "5. InCollege Important Links", "6. Friends List", "7. Log out"
+        "5. InCollege Important Links", "6. Friends List", "7. Edit my profile", "8. Log out"7. Log out"
     ]
     select_option = "\n".join(options_list)
     print(self.translate_language(select_option))
@@ -149,35 +149,41 @@ class InCollegeApp:
       self.friend_management_menu(
       )  # <-- Call the function for friend management
     elif option_number == "7":
+      self.edit_profile()
+    elif option_number == "8":
       print(self.translate_language("You have successfully logged out."))
       self.main_menu()
     else:
       print(self.translate_language("Invalid Option"))
 
   def friend_management_menu(self):
-    print(self.translate_language("Friend Management Menu"))
-    friend_management_options = [
-        "1. Search and Connect with Friends",
-        "2. Manage Pending Friend Requests",
-        "3. Other Friend Management Options",  # Add more options as needed
-        "4. Return to Previous Menu"
-    ]
-    friend_management_menu = "\n".join(friend_management_options)
-    print(self.translate_language(friend_management_menu))
-    selected_option = input(self.translate_language("Select an option: "))
+        print(self.translate_language("Friend Management Menu"))
+        friend_management_options = [
+            "1. Search and Connect with Friends",
+            "2. Manage Pending Friend Requests",
+            "3. Other Friend Management Options",  
+            "4. View Friend's Profile",
+            "5. Return to Previous Menu"
+        ]
+        friend_management_menu = "\n".join(friend_management_options)
+        print(self.translate_language(friend_management_menu))
+        selected_option = input(self.translate_language("Select an option: "))
 
-    if selected_option == "1":
-      self.search_and_connect_friends(
-      )  # <-- Call the function for searching and connecting
-    elif selected_option == "2":
-      self.manage_pending_friend_requests(username="test")  # <-- Call the function for managing pending requests
-    elif selected_option == "3":
-      self.other_friend_management_options(
-      )  # <-- Add more options and functions
-    elif selected_option == "4":
-      self.get_post_login_options()  # <-- Return to the post-login menu
-    else:
-      print(self.translate_language("Invalid Option"))
+        if selected_option == "1":
+          self.search_and_connect_friends(
+          )  # <-- Call the function for searching and connecting
+        elif selected_option == "2":
+          self.manage_pending_friend_requests(username="test")  # <-- Call the function for managing pending requests
+        elif selected_option == "3":
+          self.other_friend_management_options(
+          )  # <-- Add more options and functions
+        elif selected_option == "4": #------- Epic 5 ----------- task 3-----
+                friend_email_to_view = input(self.translate_language("Enter friend's email to view their profile: "))
+                self.display_friend_profile(friend_email_to_view)
+        elif selected_option == "5":
+          self.get_post_login_options()  # <-- Return to the post-login menu
+        else:
+          print(self.translate_language("Invalid Option"))
 
   def list_skills(self):
     skills = [
@@ -581,3 +587,65 @@ class InCollegeApp:
     self.user_credentials[username]['friend_requests'] = friend_requests
     self.user_credentials[username]['friends'] = friends
     print("updated friends list",self.user_credentials["test"]["friends"])
+
+
+
+
+#------------------------Epic 5 ------------------------#
+
+#-------------task 2------------------_#
+  def edit_profile(self):
+      """Allow a student to edit their profile."""
+      print(self.translate_language("Editing profile..."))
+  
+      print(f"\nCurrent Profile:")
+      print(f"1. First Name: {self.user_credentials['test']['first_name']}")
+      print(f"2. Last Name: {self.user_credentials['test']['last_name']}")
+      print(f"3. Email: {self.user_credentials['test']['email']}")
+      print(f"4. Password: {self.user_credentials['test']['password']}")
+      # Add more fields as needed
+  
+      # Prompt the user for updates
+      update_fields = [
+          ("first_name", "First Name"),
+          ("last_name", "Last Name"),
+          ("email", "Email"),
+          ("password", "Password"),
+          # Add more fields as needed
+      ]
+  
+      for field, field_name in update_fields:
+        user_input = input(
+            self.translate_language(
+                f"Enter new {field_name} (leave blank to keep current): "))
+        if user_input:
+          self.user_credentials['test'][field] = user_input
+  
+      print(self.translate_language("Profile updated successfully"))
+
+#-----------------------Task 3-------------------------#
+  def has_profile(self, email):
+      """Check if a friend has a profile."""
+      friend = self.get_student_by_email(email)
+      return friend is not None
+  
+    def display_friend_profile(self, friend_email):
+      """Display a friend's profile."""
+      if self.has_profile(friend_email):
+        friend_profile = self.get_student_by_email(friend_email)
+        print("\nFriend's Profile:")
+        print(
+            f"Name: {friend_profile['first_name']} {friend_profile['last_name']}"
+        )
+        print(f"University: {friend_profile['university']}")
+        print(f"Major: {friend_profile['major']}")
+        # Add more fields as needed
+      else:
+        print("\nFriend does not have a profile.")
+  
+    def get_student_by_email(self, email):
+      """Get a student's profile by email."""
+      for student in self.students:
+        if student["email"] == email:
+          return student
+      return None
