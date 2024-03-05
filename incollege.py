@@ -127,7 +127,7 @@ class InCollegeApp:
     options_list = [
         "1. Job search/Internship", "2. Find someone you know",
         "3. Learn a new skill", "4. Useful Links",
-        "5. InCollege Important Links", "6. Friends List", "7. Edit my profile", "8. Log out"7. Log out"
+        "5. InCollege Important Links", "6. Friends List", "7. Edit my profile", "8. Log out","7. Log out"
     ]
     select_option = "\n".join(options_list)
     print(self.translate_language(select_option))
@@ -629,23 +629,23 @@ class InCollegeApp:
       friend = self.get_student_by_email(email)
       return friend is not None
   
-    def display_friend_profile(self, friend_email):
-      """Display a friend's profile."""
-      if self.has_profile(friend_email):
-        friend_profile = self.get_student_by_email(friend_email)
-        print("\nFriend's Profile:")
-        print(
-            f"Name: {friend_profile['first_name']} {friend_profile['last_name']}"
-        )
-        print(f"University: {friend_profile['university']}")
-        print(f"Major: {friend_profile['major']}")
-        # Add more fields as needed
-      else:
-        print("\nFriend does not have a profile.")
-  
-    def get_student_by_email(self, email):
-      """Get a student's profile by email."""
-      for student in self.students:
-        if student["email"] == email:
-          return student
-      return None
+  def display_friend_profile(self, friend_email):
+    """Display a friend's profile."""
+    if self.has_profile(friend_email):
+      friend_profile = self.get_student_by_email(friend_email)
+      print("\nFriend's Profile:")
+      print(
+          f"Name: {friend_profile['first_name']} {friend_profile['last_name']}"
+      )
+      print(f"University: {friend_profile['university']}")
+      print(f"Major: {friend_profile['major']}")
+      # Add more fields as needed
+    else:
+      print("\nFriend does not have a profile.")
+
+  def get_student_by_email(self, email):
+    """Get a student's profile by email."""
+    for student in self.students:
+      if student["email"] == email:
+        return student
+    return None
