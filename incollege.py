@@ -649,3 +649,22 @@ class InCollegeApp:
       if student["email"] == email:
         return student
     return None
+
+  def remove_job(self, username, job_title, job_description, employer, location, salary, role, experience_level):
+      job_details = {
+          'title': job_title,
+          'description': job_description,
+          'employer': employer,
+          'location': location,
+          'salary': salary,
+          'role': role,
+          'experience_level': experience_level
+      }
+      
+      # Check if the username already has saved jobs
+      if username in self.saved_jobs:
+          # Append the job details to the existing list of saved jobs
+        self.saved_jobs[username].remove(job_details)
+        return {"line":"Job removed successfully.","status":"removed"}
+      else:
+        return {"line":"No Such Job for this User","status":"not removed"}
